@@ -43,7 +43,7 @@ const IMGS = {
   marinHeroLight:
     "https://github.com/afporiginal/afporiginal/blob/main/images/37_Sem_Titulo_20260508142825.png?raw=true",
   marinHeroDark:
-    "https://github.com/afporiginal/afporiginal/blob/main/images/image.png?raw=true",
+    "https://github.com/afporiginal/afporiginal/blob/main/images/38_Sem_Titulo_20260508142505.png?raw=true",
   marinPeace:
     "https://raw.githubusercontent.com/afporiginal/afporiginal/main/images/Kitagawa_Marin-removebg-preview.png",
   marinAvatar:
