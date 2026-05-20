@@ -245,7 +245,7 @@ function LandingPage({ onEnter }: { onEnter: () => void }) {
 
       {/* Top left */}
       <div style={{ position: "absolute", top: "20px", left: "24px", zIndex: 10, opacity: mounted ? 1 : 0, transform: mounted ? "translateY(0)" : "translateY(-10px)", transition: "all 0.6s ease 0.2s" }}>
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.7rem", color: T.muted, letterSpacing: "0.2em", textTransform: "uppercase" }}>Portfolio / 2025</span>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.7rem", color: T.muted, letterSpacing: "0.2em", textTransform: "uppercase" }}>Portfolio / 2026</span>
       </div>
 
       {/* Top right */}
@@ -599,7 +599,7 @@ const SKILLS = [
   { name: "Lua", pct: 70, color: "#000080" },
   { name: "JavaScript", pct: 65, color: "#F7DF1E" },
   { name: "React / Node.js", pct: 55, color: "#61dafb" },
-  { name: "Blender", pct: 50, color: "#F5792A" },
+  { name: "Blender", pct: 99, color: "#F5792A" },
   { name: "Git", pct: 60, color: "#F05032" },
 ];
 
@@ -717,27 +717,15 @@ function GitHubSection() {
           ))}
         </div>
         <div style={{ padding: "1.5rem 2rem 2rem" }}>
-          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.95rem", color: T.muted, lineHeight: 1.7, textAlign: "center", maxWidth: "500px", margin: "0 auto 1.5rem" }}>
-            My GitHub is still growing — every great dev starts somewhere. Right now it hosts this <strong style={{ color: T.rosa }}>portfolio</strong> and my <strong style={{ color: T.gold }}>profile README</strong> that brings you here. More projects coming soon! ⚡
-          </p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1rem", marginBottom: "1.5rem" }}>
-            {[{ name: "portfolio", desc: "This website — my personal portfolio built with React + Vite", lang: "TypeScript", langColor: "#3178c6" }, { name: "afporiginal", desc: "My profile README — the gateway to everything", lang: "Markdown", langColor: "#083fa1" }].map((repo) => (
-              <a key={repo.name} href={`${GITHUB}/${repo.name}`} target="_blank" rel="noopener noreferrer"
-                style={{ background: T.bgAlt, border: `1px solid ${T.border}`, borderRadius: "12px", padding: "16px", textDecoration: "none", transition: "all 0.3s ease", display: "block", boxShadow: isLight ? `0 1px 3px ${T.shadow}` : "none" }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = `${T.rosa}66`; e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = isLight ? `0 6px 20px ${T.shadow}` : `0 6px 20px ${T.rosa}15`; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = isLight ? `0 1px 3px ${T.shadow}` : "none"; }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-                  <span style={{ fontSize: "1rem" }}>📌</span>
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem", fontWeight: 600, color: T.rosa }}>{repo.name}</span>
-                </div>
-                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.8rem", color: T.muted, lineHeight: 1.5, marginBottom: "10px" }}>{repo.desc}</p>
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: repo.langColor }} />
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.7rem", color: T.muted }}>{repo.lang}</span>
-                </div>
-              </a>
-            ))}
+          {/* Working on projects message */}
+          <div style={{ textAlign: "center", padding: "2rem 1rem", margin: "0 auto 1.5rem", maxWidth: "480px" }}>
+            <span style={{ fontSize: "2.5rem", display: "block", marginBottom: "1rem" }}>🔨</span>
+            <p style={{ fontFamily: "'Sora', sans-serif", fontSize: "1.1rem", fontWeight: 600, color: T.text, marginBottom: "0.8rem" }}>
+              Working on something big.
+            </p>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.9rem", color: T.muted, lineHeight: 1.7 }}>
+              I'm currently building some ambitious projects behind the scenes. Can't share them just yet — but they'll be worth the wait. <strong style={{ color: T.rosa }}>Stay tuned.</strong> ⚡
+            </p>
           </div>
           <div style={{ textAlign: "center" }}>
             <a href={GITHUB} target="_blank" rel="noopener noreferrer" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
@@ -882,10 +870,10 @@ const TERMINAL_COMMANDS: Record<string, string[]> = {
     "💬 Discord:   afploriginal",
   ],
   projects: [
-    "📌 portfolio     — This website (React + Vite)",
-    "📌 afporiginal   — Profile README",
+    "🔨 Currently working on big projects...",
     "",
-    "   More projects coming soon... ⚡",
+    "   Can't share them just yet.",
+    "   Stay tuned — they'll be worth the wait. ⚡",
   ],
 };
 
