@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from "react";
 import { Scene3DCanvas, ScrollToTopRewind } from "./Scene3D";
 
-/* ───────────────────── THEME SYSTEM ───────────────────── */
+/* ───────────────────── THEME SYSTEM (CYBER HOLOGRAPHIC) ───────────────────── */
 type Theme = "dark" | "light";
 
 interface Colors {
-  rosa: string;
-  gold: string;
+  rosa: string;      // Neon Pink
+  gold: string;      // Cyan
   bg: string;
   bgAlt: string;
   card: string;
@@ -23,35 +23,35 @@ interface Colors {
 
 const THEMES: Record<Theme, Colors> = {
   dark: {
-    rosa: "#e8788a",
-    gold: "#f5c542",
-    bg: "#0a0a0f",
-    bgAlt: "#0e0e16",
-    card: "#12121a",
-    cardHover: "#1a1a26",
-    border: "#1e1e2a",
-    muted: "#6b7280",
-    text: "#e2e8f0",
-    textSoft: "#b0b8c8",
-    navBg: "rgba(10,10,15,0.8)",
+    rosa: "#f2a0b3",       // Sakura pink (Marin's blush)
+    gold: "#7ec8e3",       // Marin's eye blue
+    bg: "#0d0a10",         // Deep plum-black
+    bgAlt: "#110e15",
+    card: "#15121c",       // Dark lavender card
+    cardHover: "#1c1826",
+    border: "#2a2235",     // Soft purple border
+    muted: "#7a7088",      // Lavender gray
+    text: "#f0e8f5",       // Warm white with pink tint
+    textSoft: "#c4b8d0",
+    navBg: "rgba(13,10,16,0.82)",
     shadow: "rgba(0,0,0,0.4)",
-    gridLine: "#e8788a15",
+    gridLine: "#f2a0b312",
     particleOpacity: 1,
   },
   light: {
-    rosa: "#d4627a",
-    gold: "#c49520",
-    bg: "#faf7f4",
-    bgAlt: "#f3efe9",
+    rosa: "#e0758e",
+    gold: "#5aabb8",
+    bg: "#fef8f9",         // Soft sakura white
+    bgAlt: "#faf0f2",
     card: "#ffffff",
-    cardHover: "#fefcfa",
-    border: "#e8e0d8",
-    muted: "#8a8290",
-    text: "#1a1520",
-    textSoft: "#4a4355",
-    navBg: "rgba(250,247,244,0.82)",
-    shadow: "rgba(180,150,130,0.12)",
-    gridLine: "#d4627a10",
+    cardHover: "#fffbfc",
+    border: "#f0d8de",     // Pink-tinted border
+    muted: "#9a8a94",
+    text: "#1a0f18",
+    textSoft: "#5a4558",
+    navBg: "rgba(254,248,249,0.85)",
+    shadow: "rgba(200,140,160,0.1)",
+    gridLine: "#e0758e08",
     particleOpacity: 0.5,
   },
 };
@@ -144,7 +144,7 @@ function ThemeToggle({ size = 36 }: { size?: number }) {
         width: `${size}px`,
         height: `${size}px`,
         borderRadius: "12px",
-        background: isDark ? T.card : T.card,
+        background: T.card,
         border: `1px solid ${T.border}`,
         display: "flex",
         alignItems: "center",
@@ -155,6 +155,7 @@ function ThemeToggle({ size = 36 }: { size?: number }) {
         boxShadow: isDark ? "none" : `0 2px 8px ${T.shadow}`,
         position: "relative",
         overflow: "hidden",
+        backdropFilter: "blur(8px)",
       }}
       onMouseEnter={(e) => { e.currentTarget.style.borderColor = T.rosa; e.currentTarget.style.transform = "rotate(15deg) scale(1.1)"; }}
       onMouseLeave={(e) => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.transform = "rotate(0deg) scale(1)"; }}
@@ -325,6 +326,7 @@ function LandingPage({ onEnter }: { onEnter: () => void }) {
 const NAV_ITEMS = [
   { label: "Home", id: "home" },
   { label: "About", id: "about" },
+  { label: "Journey", id: "journey" },
   { label: "Tech", id: "tech" },
   { label: "GitHub", id: "github" },
 ];
@@ -447,6 +449,30 @@ function AnimatedCard({ children, delay = 0, style: s }: { children: React.React
   );
 }
 
+/* ───────────────────── ANIMATED DIVIDER ───────────────────── */
+function Divider({ flip }: { flip?: boolean }) {
+  const { T } = useT();
+  return (
+    <div style={{ position: "relative", height: "80px", overflow: "hidden", pointerEvents: "none" }}>
+      {/* Flowing dashed line */}
+      <svg width="100%" height="2" style={{ position: "absolute", top: "50%", left: 0 }}>
+        <line x1="0" y1="1" x2="100%" y2="1" stroke={`${T.rosa}22`} strokeWidth="1" strokeDasharray="8 6" style={{ animation: "dash-flow 1.5s linear infinite" }} />
+      </svg>
+      {/* Center dot */}
+      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "6px", height: "6px", borderRadius: "50%", background: T.rosa, boxShadow: `0 0 12px ${T.rosa}55`, opacity: 0.6 }} />
+      {/* Side glows */}
+      <div style={{ position: "absolute", top: "50%", left: flip ? "15%" : "85%", transform: "translateY(-50%)", width: "100px", height: "100px", borderRadius: "50%", background: `radial-gradient(circle, ${T.rosa}08 0%, transparent 70%)`, animation: "breathe 6s ease-in-out infinite" }} />
+    </div>
+  );
+}
+
+/* ───────────────────── SECTION GLOW BACKGROUND ───────────────────── */
+function SectionGlow({ color, side }: { color: string; side: "left" | "right" }) {
+  return (
+    <div style={{ position: "absolute", top: "20%", [side]: "-10%", width: "clamp(200px, 40vw, 400px)", height: "clamp(200px, 40vw, 400px)", borderRadius: "50%", background: `radial-gradient(circle, ${color}06 0%, transparent 70%)`, pointerEvents: "none", animation: "breathe 8s ease-in-out infinite", zIndex: 0 }} />
+  );
+}
+
 /* ───────────────────── HERO ───────────────────── */
 function HeroSection() {
   const { T, theme } = useT();
@@ -508,6 +534,115 @@ function HeroSection() {
   );
 }
 
+/* ───────────────────── QUOTE BANNER ───────────────────── */
+function QuoteBanner() {
+  const { T, theme } = useT();
+  const { ref, visible } = useInView(0.2);
+  const isLight = theme === "light";
+  return (
+    <div ref={ref} style={{ padding: "clamp(4rem, 10vw, 7rem) 24px", textAlign: "center", position: "relative", overflow: "hidden", background: isLight ? `linear-gradient(180deg, transparent, ${T.rosa}04, transparent)` : `linear-gradient(180deg, transparent, ${T.rosa}08, transparent)` }}>
+      {/* Big decorative quotes */}
+      <span style={{ position: "absolute", top: "5%", left: "6%", fontSize: "clamp(5rem, 15vw, 12rem)", fontFamily: "'Sora', sans-serif", fontWeight: 800, color: `${T.rosa}06`, lineHeight: 1, pointerEvents: "none", userSelect: "none", animation: "breathe 10s ease-in-out infinite" }}>"</span>
+      <span style={{ position: "absolute", bottom: "0%", right: "6%", fontSize: "clamp(5rem, 15vw, 12rem)", fontFamily: "'Sora', sans-serif", fontWeight: 800, color: `${T.gold}05`, lineHeight: 1, pointerEvents: "none", userSelect: "none", transform: "rotate(180deg)", animation: "breathe 10s ease-in-out 3s infinite" }}>"</span>
+
+      {/* Ambient blob */}
+      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "500px", height: "500px", borderRadius: "50%", background: `radial-gradient(circle, ${T.rosa}05 0%, transparent 60%)`, animation: "breathe 8s ease-in-out infinite", pointerEvents: "none" }} />
+
+      <div style={{ maxWidth: "700px", margin: "0 auto", position: "relative", zIndex: 1, opacity: visible ? 1 : 0, transform: visible ? "translateY(0) scale(1)" : "translateY(30px) scale(0.97)", transition: "all 1s cubic-bezier(0.16,1,0.3,1)" }}>
+        <p style={{ fontFamily: "'Sora', sans-serif", fontSize: "clamp(1.4rem, 3.5vw, 2.2rem)", fontWeight: 700, color: T.text, lineHeight: 1.5, marginBottom: "1.2rem", letterSpacing: "-0.01em" }}>
+          I don't just write code —{" "}
+          <span data-gradient-text="" style={{ background: `linear-gradient(90deg, ${T.rosa}, ${T.gold})`, display: "inline" }}>I build experiences.</span>
+        </p>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px" }}>
+          <div style={{ width: "24px", height: "1px", background: `${T.rosa}44` }} />
+          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.75rem", color: T.muted, letterSpacing: "0.1em" }}>AFPL</p>
+          <div style={{ width: "24px", height: "1px", background: `${T.rosa}44` }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ───────────────────── JOURNEY TIMELINE ───────────────────── */
+const JOURNEY = [
+  { year: "2022", title: "First Lines of Code", desc: "Started learning Python from scratch. Built my first scripts and automations.", icon: "🐍", color: "#3776AB" },
+  { year: "2023", title: "Discovered Lua", desc: "Dove into Lua scripting for Roblox and game development. Fell in love with the simplicity.", icon: "🌙", color: "#000080" },
+  { year: "2024", title: "3D & Blender", desc: "Started creating 3D models and renders. Found a new way to express creativity.", icon: "🎨", color: "#F5792A" },
+  { year: "2025", title: "Web Development", desc: "Jumped into React, Node.js, and modern web tooling. Built this portfolio from the ground up.", icon: "🌐", color: "#61dafb" },
+  { year: "2026", title: "What's Next?", desc: "Working on ambitious projects. The best is yet to come.", icon: "🚀", color: "#e8788a" },
+];
+
+function JourneySection() {
+  const { T, theme } = useT();
+  const isLight = theme === "light";
+  return (
+    <Section id="journey" style={{ paddingBottom: "40px", position: "relative", overflow: "hidden" }}>
+      <SectionGlow color="#61dafb" side="right" />
+      <SectionTitle>My Journey</SectionTitle>
+      <div style={{ position: "relative", maxWidth: "600px", margin: "0 auto" }}>
+        {/* Vertical line */}
+        <div style={{ position: "absolute", left: "20px", top: "8px", bottom: "8px", width: "2px", background: `linear-gradient(to bottom, ${T.rosa}44, ${T.gold}44, ${T.rosa}44)`, borderRadius: "1px" }} />
+
+        {JOURNEY.map((item, i) => (
+          <JourneyItem key={item.year} item={item} index={i} T={T} isLight={isLight} />
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function JourneyItem({ item, index, T, isLight }: { item: typeof JOURNEY[number]; index: number; T: Colors; isLight: boolean }) {
+  const { ref, visible } = useInView(0.1);
+  const [hovered, setHovered] = useState(false);
+  const isLast = index === JOURNEY.length - 1;
+
+  return (
+    <div
+      ref={ref}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex", gap: "20px", alignItems: "flex-start", marginBottom: isLast ? "0" : "2rem",
+        opacity: visible ? 1 : 0, transform: visible ? "translateX(0)" : "translateX(-20px)",
+        transition: `all 0.5s ease ${index * 0.12}s`,
+      }}
+    >
+      {/* Dot on timeline */}
+      <div style={{ flexShrink: 0, width: "42px", display: "flex", justifyContent: "center", position: "relative", zIndex: 2 }}>
+        <div style={{
+          width: "42px", height: "42px", borderRadius: "50%",
+          background: hovered ? `${item.color}22` : T.card,
+          border: `2px solid ${hovered ? item.color : T.border}`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: "1.1rem", transition: "all 0.3s ease",
+          boxShadow: hovered ? `0 0 20px ${item.color}33` : (isLight ? `0 1px 4px ${T.shadow}` : "none"),
+        }}>
+          {item.icon}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div style={{
+        flex: 1, background: T.card, border: `1px solid ${hovered ? item.color + "44" : T.border}`, borderRadius: "14px", padding: "16px 20px",
+        transition: "all 0.3s ease", transform: hovered ? "translateX(4px)" : "translateX(0)",
+        boxShadow: hovered ? (isLight ? `0 6px 20px ${T.shadow}` : `0 6px 20px ${item.color}15`) : (isLight ? `0 1px 4px ${T.shadow}` : "none"),
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.7rem", color: item.color, fontWeight: 600, padding: "2px 8px", borderRadius: "6px", background: `${item.color}15`, border: `1px solid ${item.color}22` }}>{item.year}</span>
+          <span style={{ fontFamily: "'Sora', sans-serif", fontWeight: 600, fontSize: "0.95rem", color: T.text }}>{item.title}</span>
+        </div>
+        <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.8rem", color: T.muted, lineHeight: 1.6 }}>{item.desc}</p>
+        {isLast && (
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "8px" }}>
+            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 6px #22c55e88" }} />
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.65rem", color: "#22c55e" }}>in progress</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ───────────────────── TECH MARQUEE ───────────────────── */
 function TechMarquee() {
   const { T } = useT();
@@ -529,7 +664,8 @@ function TechMarquee() {
 function AboutSection() {
   const { T } = useT();
   return (
-    <Section id="about">
+    <Section id="about" style={{ position: "relative", overflow: "hidden" }}>
+      <SectionGlow color={T.rosa} side="left" />
       <SectionTitle>About me</SectionTitle>
       <AnimatedCard delay={0} style={{ padding: "2rem", marginBottom: "2rem" }}>
         <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", alignItems: "center" }}>
@@ -630,7 +766,8 @@ function SkillBar({ name, pct, color, delay }: { name: string; pct: number; colo
 function TechSection() {
   const { T } = useT();
   return (
-    <Section id="tech">
+    <Section id="tech" style={{ position: "relative", overflow: "hidden" }}>
+      <SectionGlow color={T.gold} side="right" />
       <SectionTitle>Tech Stack</SectionTitle>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "1rem" }}>
         {TECHS.map((tech, i) => <TechCard key={tech.name} tech={tech} delay={i * 0.08} />)}
@@ -679,6 +816,112 @@ function StatCard({ label, value, icon, delay }: { label: string; value: string;
       <span style={{ fontSize: "1.5rem" }}>{icon}</span>
       <p style={{ fontFamily: "'Sora', sans-serif", fontSize: "1.5rem", fontWeight: 700, color: T.rosa, marginTop: "6px", animation: visible ? "count-up 0.8s ease" : undefined }}>{value}</p>
       <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.75rem", color: T.muted, marginTop: "4px" }}>{label}</p>
+    </div>
+  );
+}
+
+/* ───────────────────── CURRENTLY INTO ───────────────────── */
+const INTERESTS = [
+  { label: "Watching", value: "Sono Bisque Doll", emoji: "📺", sub: "anime" },
+  { label: "Playing", value: "Roblox Studio", emoji: "🎮", sub: "creating" },
+  { label: "Learning", value: "Three.js & WebGL", emoji: "📚", sub: "3D on the web" },
+  { label: "Listening", value: "Lofi / Phonk", emoji: "🎧", sub: "LOVELI LORI · Anavitória · Brevis" },
+  { label: "Building", value: "Something big", emoji: "🔨", sub: "soon™" },
+];
+
+function CurrentlyInto() {
+  const { T, theme } = useT();
+  const { ref, visible } = useInView(0.1);
+  const isLight = theme === "light";
+
+  return (
+    <Section id="vibes" style={{ paddingTop: "40px" }}>
+      <SectionTitle>Currently Into</SectionTitle>
+      <div ref={ref} style={{ display: "flex", gap: "1rem", overflowX: "auto", paddingBottom: "8px", scrollSnapType: "x mandatory" }}>
+        {INTERESTS.map((item, i) => (
+          <CurrentlyCard key={item.label} item={item} index={i} visible={visible} T={T} isLight={isLight} />
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function CurrentlyCard({ item, index, visible, T, isLight }: { item: typeof INTERESTS[number]; index: number; visible: boolean; T: Colors; isLight: boolean }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        flex: "0 0 200px", scrollSnapAlign: "start",
+        background: T.card, border: `1px solid ${hovered ? T.rosa + "44" : T.border}`, borderRadius: "16px",
+        padding: "20px 18px", display: "flex", flexDirection: "column", gap: "10px",
+        transition: `all 0.3s ease`,
+        opacity: visible ? 1 : 0,
+        transform: visible ? (hovered ? "translateY(-4px)" : "translateY(0)") : "translateY(20px)",
+        transitionDelay: `${index * 0.08}s`,
+        boxShadow: hovered ? (isLight ? `0 8px 25px ${T.shadow}` : `0 8px 25px ${T.rosa}12`) : (isLight ? `0 1px 4px ${T.shadow}` : "none"),
+      }}
+    >
+      <span style={{ fontSize: "1.8rem", display: "inline-block", animation: `icon-bob ${2 + index * 0.3}s ease-in-out infinite`, animationDelay: `${index * 0.2}s` }}>{item.emoji}</span>
+      <div>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.65rem", color: T.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "4px" }}>{item.label}</p>
+        <p style={{ fontFamily: "'Sora', sans-serif", fontSize: "0.95rem", fontWeight: 600, color: T.text }}>{item.value}</p>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.65rem", color: T.muted, marginTop: "4px" }}>{item.sub}</p>
+      </div>
+    </div>
+  );
+}
+
+/* ───────────────────── SETUP / DAILY DRIVER ───────────────────── */
+function SetupSection() {
+  const { T, theme } = useT();
+  const { ref, visible } = useInView(0.1);
+  const isLight = theme === "light";
+
+  const setup = [
+    { icon: "💻", label: "Editor", value: "VS Code", detail: "+ Vim motions" },
+    { icon: "🎨", label: "Design", value: "Blender", detail: "3D & renders" },
+    { icon: "🦁", label: "Browser", value: "Brave", detail: "privacy + speed" },
+    { icon: "🖥️", label: "OS", value: "Windows", detail: "11" },
+    { icon: "⌨️", label: "Terminal", value: "PowerShell", detail: "+ Oh My Posh" },
+    { icon: "🎵", label: "Music", value: "Lofi", detail: "always on" },
+  ];
+
+  return (
+    <Section id="setup" style={{ paddingTop: "40px", paddingBottom: "40px" }}>
+      <SectionTitle>My Setup</SectionTitle>
+      <div ref={ref} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))", gap: "1rem" }}>
+        {setup.map((item, i) => (
+          <SetupCard key={item.label} item={item} index={i} visible={visible} T={T} isLight={isLight} />
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function SetupCard({ item, index, visible, T, isLight }: { item: { icon: string; label: string; value: string; detail: string }; index: number; visible: boolean; T: Colors; isLight: boolean }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: T.card, border: `1px solid ${hovered ? T.gold + "44" : T.border}`, borderRadius: "14px",
+        padding: "18px 16px", display: "flex", alignItems: "flex-start", gap: "12px",
+        opacity: visible ? 1 : 0, transform: visible ? (hovered ? "translateY(-3px)" : "translateY(0)") : "translateY(15px)",
+        transition: "all 0.3s ease", transitionDelay: `${index * 0.06}s`,
+        boxShadow: hovered ? (isLight ? `0 6px 20px ${T.shadow}` : `0 6px 20px ${T.gold}12`) : (isLight ? `0 1px 4px ${T.shadow}` : "none"),
+      }}
+    >
+      <span style={{ fontSize: "1.4rem", flexShrink: 0, display: "inline-block", animation: `icon-bob ${2.5 + index * 0.2}s ease-in-out infinite`, animationDelay: `${index * 0.15}s` }}>{item.icon}</span>
+      <div>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.6rem", color: T.muted, textTransform: "uppercase", letterSpacing: "0.1em" }}>{item.label}</p>
+        <p style={{ fontFamily: "'Sora', sans-serif", fontSize: "0.9rem", fontWeight: 600, color: T.text, marginTop: "2px" }}>{item.value}</p>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.6rem", color: T.muted, marginTop: "2px" }}>{item.detail}</p>
+      </div>
     </div>
   );
 }
@@ -868,6 +1111,7 @@ const TERMINAL_COMMANDS: Record<string, string[]> = {
   socials: [
     "🐙 GitHub:    github.com/afporiginal",
     "💬 Discord:   afploriginal",
+    "🎵 Last.fm:   last.fm/user/AFPLTheDrip",
   ],
   projects: [
     "🔨 Currently working on big projects...",
@@ -1022,6 +1266,509 @@ function Terminal() {
   );
 }
 
+/* ───────────────────── FUN FACTS ───────────────────── */
+const FACTS = [
+  { front: "🎌", back: "Anime enjoyer — Sono Bisque Doll is peak", color: "#e8788a" },
+  { front: "🕐", back: "I code better at 3AM than 3PM", color: "#f5c542" },
+  { front: "🧠", back: "Self-taught — YouTube + docs + pain", color: "#61dafb" },
+  { front: "🎮", back: "Started making Discord bots — none worked, but I learned a lot", color: "#22c55e" },
+  { front: "🔥", back: "Once spent 12h debugging a missing semicolon", color: "#F05032" },
+  { front: "🌍", back: "Dream: build something millions use", color: "#F5792A" },
+];
+
+function FunFacts() {
+  const { T, theme } = useT();
+  const isLight = theme === "light";
+  return (
+    <Section id="facts" style={{ paddingTop: "40px", paddingBottom: "40px" }}>
+      <SectionTitle>Fun Facts</SectionTitle>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "1rem" }}>
+        {FACTS.map((fact, i) => <FactCard key={i} fact={fact} delay={i * 0.08} T={T} isLight={isLight} />)}
+      </div>
+    </Section>
+  );
+}
+
+function FactCard({ fact, delay, T, isLight }: { fact: typeof FACTS[number]; delay: number; T: Colors; isLight: boolean }) {
+  const { ref, visible } = useInView(0.1);
+  const [flipped, setFlipped] = useState(false);
+
+  return (
+    <div
+      ref={ref}
+      onClick={() => setFlipped(!flipped)}
+      style={{
+        perspective: "600px", cursor: "pointer", height: "140px",
+        opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(20px)",
+        transition: `opacity 0.5s ease ${delay}s, transform 0.5s ease ${delay}s`,
+      }}
+    >
+      <div style={{
+        position: "relative", width: "100%", height: "100%",
+        transformStyle: "preserve-3d",
+        transition: "transform 0.6s cubic-bezier(0.16,1,0.3,1)",
+        transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+      }}>
+        {/* Front */}
+        <div style={{
+          position: "absolute", inset: 0, backfaceVisibility: "hidden",
+          background: T.card, border: `1px solid ${T.border}`, borderRadius: "16px",
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "8px",
+          boxShadow: isLight ? `0 1px 4px ${T.shadow}` : "none",
+        }}>
+          <span style={{ fontSize: "2.5rem", display: "inline-block", animation: "icon-bob 3s ease-in-out infinite" }}>{fact.front}</span>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.6", color: T.muted }}>click me</span>
+        </div>
+        {/* Back */}
+        <div style={{
+          position: "absolute", inset: 0, backfaceVisibility: "hidden",
+          transform: "rotateY(180deg)",
+          background: `linear-gradient(135deg, ${fact.color}15, ${T.card})`,
+          border: `1px solid ${fact.color}33`, borderRadius: "16px",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          padding: "16px", textAlign: "center",
+          boxShadow: `0 4px 15px ${fact.color}15`,
+        }}>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.8rem", color: T.text, lineHeight: 1.5 }}>{fact.back}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ───────────────────── CONTACT CTA ───────────────────── */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const LOFI_NOTES: number[] = [], LOFI_MELODY: number[] = [];
+function _DEAD_CODE_START() {
+  const { T, theme } = useT();
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [bpm, setBpm] = useState(65); // Slower, dreamier
+  const [synthType, setSynthType] = useState<OscillatorType>("sine"); // Soft sine for lofi
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const timerRef = useRef<number | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const isLight = theme === "light";
+  const autoStarted = useRef(false);
+
+  // Step sequencer: 8 steps, 3 tracks (Kick, Snare, Hihat) - lofi pattern
+  const [seq, setSeq] = useState({
+    kick: [true, false, false, false, false, false, true, false],
+    snare: [false, false, false, true, false, false, false, false],
+    hat: [false, false, true, false, false, false, true, false],
+  });
+  const currentStep = useRef(0);
+
+  // Init AudioContext on interaction
+  const initAudio = () => {
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      analyserRef.current = audioCtxRef.current.createAnalyser();
+      analyserRef.current.fftSize = 64;
+      analyserRef.current.connect(audioCtxRef.current.destination);
+    }
+    if (audioCtxRef.current.state === "suspended") {
+      audioCtxRef.current.resume();
+    }
+  };
+
+  // Sound synthesis — whisper-quiet lofi
+  const playKick = (ctx: AudioContext, dest: AudioNode) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(dest);
+
+    osc.frequency.setValueAtTime(55, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(25, ctx.currentTime + 0.5);
+    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.55);
+  };
+
+  const playSnare = (ctx: AudioContext, dest: AudioNode) => {
+    const bufferSize = ctx.sampleRate * 0.1;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+    const noiseNode = ctx.createBufferSource();
+    noiseNode.buffer = buffer;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.frequency.value = 2000;
+    filter.Q.value = 0.3;
+
+    const gain = ctx.createGain();
+    noiseNode.connect(filter);
+    filter.connect(gain);
+    gain.connect(dest);
+
+    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+
+    noiseNode.start(ctx.currentTime);
+  };
+
+  const playHihat = (ctx: AudioContext, dest: AudioNode) => {
+    const bufferSize = ctx.sampleRate * 0.03;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+    const noiseNode = ctx.createBufferSource();
+    noiseNode.buffer = buffer;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = "highpass";
+    filter.frequency.value = 9000;
+
+    const gain = ctx.createGain();
+    noiseNode.connect(filter);
+    filter.connect(gain);
+    gain.connect(dest);
+
+    gain.gain.setValueAtTime(0.06, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.03);
+
+    noiseNode.start(ctx.currentTime);
+  };
+
+  // Lofi melody — very soft, long decay, muffled
+  const playMelody = (ctx: AudioContext, dest: AudioNode, freq: number) => {
+    const osc1 = ctx.createOscillator();
+    osc1.type = synthType;
+    osc1.frequency.setValueAtTime(freq, ctx.currentTime);
+
+    // Detuned layer
+    const osc2 = ctx.createOscillator();
+    osc2.type = "sine";
+    osc2.frequency.setValueAtTime(freq * 1.002, ctx.currentTime);
+
+    // Heavy lowpass — muffled like through a wall
+    const filter = ctx.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(500 + Math.random() * 300, ctx.currentTime);
+    filter.Q.value = 1;
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
+
+    osc1.connect(filter);
+    osc2.connect(filter);
+    filter.connect(gain);
+    gain.connect(dest);
+
+    osc1.start(ctx.currentTime);
+    osc2.start(ctx.currentTime);
+    osc1.stop(ctx.currentTime + 1.6);
+    osc2.stop(ctx.currentTime + 1.6);
+  };
+
+  // Manual synth pad trigger
+  const triggerNote = (freq: number) => {
+    initAudio();
+    const ctx = audioCtxRef.current;
+    const dest = analyserRef.current;
+    if (!ctx || !dest) return;
+    playMelody(ctx, dest, freq);
+  };
+
+  // Auto-start on first user interaction anywhere
+  useEffect(() => {
+    if (autoStarted.current) return;
+    const start = () => {
+      autoStarted.current = true;
+      initAudio();
+      document.removeEventListener("click", start);
+      document.removeEventListener("keydown", start);
+    };
+    document.addEventListener("click", start, { once: true });
+    document.addEventListener("keydown", start, { once: true });
+    return () => { document.removeEventListener("click", start); document.removeEventListener("keydown", start); };
+  }, []);
+
+  // Main sequencer loop — 8 steps with melody
+  useEffect(() => {
+    if (!isPlaying) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
+    const interval = (60 / bpm / 2) * 1000; // 8th notes
+    timerRef.current = window.setInterval(() => {
+      const ctx = audioCtxRef.current;
+      const dest = analyserRef.current;
+      if (!ctx || !dest) return;
+
+      const step = currentStep.current;
+      if (seq.kick[step]) playKick(ctx, dest);
+      if (seq.snare[step]) playSnare(ctx, dest);
+      if (seq.hat[step]) playHihat(ctx, dest);
+
+      // Play melody note
+      const melIdx = LOFI_MELODY[step];
+      if (melIdx >= 0 && melIdx < LOFI_NOTES.length) {
+        playMelody(ctx, dest, LOFI_NOTES[melIdx]);
+      }
+
+      currentStep.current = (step + 1) % 8;
+    }, interval);
+
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [isPlaying, bpm, seq, synthType]);
+
+  // Audio visualizer loop
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const canvasCtx = canvas.getContext("2d");
+    if (!canvasCtx) return;
+
+    let animFrame: number;
+    const renderFrame = () => {
+      animFrame = requestAnimationFrame(renderFrame);
+      const width = canvas.width;
+      const height = canvas.height;
+
+      // Clear with translucency for motion trail
+      canvasCtx.fillStyle = isLight ? "rgba(250, 248, 245, 0.25)" : "rgba(10, 10, 18, 0.25)";
+      canvasCtx.fillRect(0, 0, width, height);
+
+      const analyser = analyserRef.current;
+      if (!analyser || !isPlaying) {
+        // Draw idle sine wave
+        canvasCtx.beginPath();
+        canvasCtx.lineWidth = 2;
+        canvasCtx.strokeStyle = T.rosa;
+        for (let i = 0; i < width; i++) {
+          const y = height / 2 + Math.sin(i * 0.05 + Date.now() * 0.01) * 6;
+          if (i === 0) canvasCtx.moveTo(i, y);
+          else canvasCtx.lineTo(i, y);
+        }
+        canvasCtx.stroke();
+        return;
+      }
+
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      analyser.getByteFrequencyData(dataArray);
+
+      // Draw reactive neon equalizer bars
+      const barWidth = (width / bufferLength) * 1.5;
+      let x = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        const percent = dataArray[i] / 255;
+        const barHeight = percent * height * 0.8;
+
+        // Custom neon gradient
+        const grad = canvasCtx.createLinearGradient(0, height, 0, height - barHeight);
+        grad.addColorStop(0, T.rosa);
+        grad.addColorStop(1, T.gold);
+
+        canvasCtx.fillStyle = grad;
+        canvasCtx.fillRect(x, height - barHeight, barWidth - 2, barHeight);
+
+        x += barWidth;
+      }
+    };
+    renderFrame();
+    return () => cancelAnimationFrame(animFrame);
+  }, [T, isPlaying, isLight]);
+
+  const toggleSequencer = () => {
+    initAudio();
+    setIsPlaying(!isPlaying);
+  };
+
+  const toggleStep = (track: "kick" | "snare" | "hat", idx: number) => {
+    setSeq((prev) => ({
+      ...prev,
+      [track]: prev[track].map((val, i) => (i === idx ? !val : val)),
+    }));
+  };
+
+  // Key frequencies (C minor pentatonic — lofi range)
+  const KEYS = [
+    { label: "C3", freq: 130.81 },
+    { label: "Eb3", freq: 155.56 },
+    { label: "F3", freq: 174.61 },
+    { label: "G3", freq: 196.00 },
+    { label: "Bb3", freq: 233.08 },
+    { label: "C4", freq: 261.63 },
+  ];
+
+  return (
+    <Section id="soundboard">
+      <SectionTitle>Sinth & Beatmaker (Phonk/Lofi)</SectionTitle>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2rem" }}>
+        {/* Controller & Sequencer */}
+        <AnimatedCard>
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <h4 style={{ fontFamily: "'Sora', sans-serif", fontWeight: 700, color: T.text }}>Beatmaker v1.0</h4>
+              <button
+                onClick={toggleSequencer}
+                style={{
+                  padding: "8px 20px", borderRadius: "10px", border: "none", cursor: "pointer",
+                  background: isPlaying ? T.rosa : `linear-gradient(135deg, ${T.gold}, ${T.gold}bb)`,
+                  color: "#000", fontWeight: 700, fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: "0.8rem", transition: "all 0.3s ease",
+                  boxShadow: `0 0 15px ${isPlaying ? T.rosa : T.gold}44`,
+                }}
+              >
+                {isPlaying ? "⏸ STOP" : "▶ PLAY LOFI"}
+              </button>
+            </div>
+
+            {/* Step grids */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              {Object.entries(seq).map(([track, steps]) => (
+                <div key={track} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.7rem", width: "45px", color: T.muted, textTransform: "uppercase" }}>{track}</span>
+                  <div style={{ display: "flex", gap: "6px", flex: 1 }}>
+                    {steps.map((active, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => toggleStep(track as any, idx)}
+                        style={{
+                          flex: 1, height: "30px", borderRadius: "8px", border: `1px solid ${active ? T.rosa : T.border}`,
+                          background: active ? T.rosa : "transparent",
+                          cursor: "pointer", transition: "all 0.2s ease",
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* BPM & Synth Type controls */}
+            <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
+              <div style={{ flex: 1 }}>
+                <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.65rem", color: T.muted, marginBottom: "4px" }}>BPM: {bpm}</p>
+                <input
+                  type="range" min="60" max="180" value={bpm}
+                  onChange={(e) => setBpm(parseInt(e.target.value))}
+                  style={{ width: "100%", accentColor: T.rosa }}
+                />
+              </div>
+              <div>
+                <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.65rem", color: T.muted, marginBottom: "4px" }}>SYNTH WAF</p>
+                <div style={{ display: "flex", gap: "4px" }}>
+                  {(["sine", "triangle", "sawtooth"] as OscillatorType[]).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setSynthType(t)}
+                      style={{
+                        padding: "4px 8px", borderRadius: "6px", border: `1px solid ${synthType === t ? T.rosa : T.border}`,
+                        background: synthType === t ? `${T.rosa}15` : "transparent",
+                        color: synthType === t ? T.rosa : T.muted,
+                        fontSize: "0.6rem", fontFamily: "'JetBrains Mono', monospace", cursor: "pointer",
+                      }}
+                    >
+                      {t === "sine" ? "SIN" : t === "triangle" ? "TRI" : "SAW"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </AnimatedCard>
+
+        {/* Synth Keys & Visualizer */}
+        <AnimatedCard>
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px", height: "100%" }}>
+            {/* Visualizer canvas */}
+            <div style={{ background: isLight ? "#f0ebe4" : "#08080f", border: `1px solid ${T.border}`, borderRadius: "14px", overflow: "hidden", height: "100px", position: "relative" }}>
+              <canvas ref={canvasRef} width="350" height="100" style={{ width: "100%", height: "100%" }} />
+              <span style={{ position: "absolute", top: "8px", right: "12px", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.55rem", color: T.muted, letterSpacing: "0.15em" }}>OS.OSCILLOSCOPE</span>
+            </div>
+
+            {/* Synthesizer pads */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.65rem", color: T.muted }}>SYNTH PADS (TAP TO VIBE)</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
+                {KEYS.map((k) => (
+                  <button
+                    key={k.label}
+                    onClick={() => triggerNote(k.freq)}
+                    style={{
+                      padding: "16px 0", borderRadius: "10px", border: `1px solid ${T.border}`,
+                      background: T.card, color: T.text, fontWeight: 700, fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: "0.75rem", cursor: "pointer", transition: "all 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = T.rosa; e.currentTarget.style.background = `${T.rosa}0a`; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.background = T.card; }}
+                  >
+                    {k.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </AnimatedCard>
+      </div>
+    </Section>
+  );
+}
+
+/* ───────────────────── CONTACT CTA ───────────────────── */
+function ContactSection() {
+  const { T, theme } = useT();
+  const { ref, visible } = useInView(0.1);
+  const isLight = theme === "light";
+
+  return (
+    <Section id="contact">
+      <div
+        ref={ref}
+        style={{
+          position: "relative", borderRadius: "24px", overflow: "hidden",
+          background: isLight ? `linear-gradient(135deg, ${T.rosa}10, ${T.gold}08, ${T.rosa}05)` : `linear-gradient(135deg, ${T.rosa}18, ${T.gold}10, ${T.rosa}08)`,
+          border: `1px solid ${T.border}`, padding: "clamp(2.5rem, 6vw, 4rem)",
+          opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(30px)", transition: "all 0.7s ease",
+          boxShadow: isLight ? `0 4px 20px ${T.shadow}` : "none",
+        }}
+      >
+        {/* Decorative circles */}
+        <div style={{ position: "absolute", top: "-40px", right: "-40px", width: "200px", height: "200px", borderRadius: "50%", border: `1px solid ${T.rosa}15`, pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: "-60px", left: "-30px", width: "250px", height: "250px", borderRadius: "50%", border: `1px solid ${T.gold}10`, pointerEvents: "none" }} />
+
+        <div style={{ position: "relative", zIndex: 2, textAlign: "center" }}>
+          <span style={{ fontSize: "2.5rem", display: "block", marginBottom: "1rem" }}>💬</span>
+          <h2 style={{ fontFamily: "'Sora', sans-serif", fontSize: "clamp(1.5rem, 3.5vw, 2.2rem)", fontWeight: 700, color: T.text, marginBottom: "0.8rem" }}>
+            Want to work together?
+          </h2>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "1rem", color: T.muted, lineHeight: 1.7, maxWidth: "450px", margin: "0 auto 2rem" }}>
+            I'm always open to new ideas, collaborations, and interesting conversations. Feel free to reach out — let's build something cool.
+          </p>
+          <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+            <a href="https://github.com/afporiginal" target="_blank" rel="noopener noreferrer"
+              style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "12px 28px", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem", fontWeight: 600, color: "#fff", background: T.rosa, borderRadius: "12px", textDecoration: "none", transition: "all 0.3s ease", boxShadow: `0 4px 15px ${T.rosa}33` }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 6px 25px ${T.rosa}55`; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = `0 4px 15px ${T.rosa}33`; }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              GitHub
+            </a>
+            <a href="https://discord.com/users/afploriginal" target="_blank" rel="noopener noreferrer"
+              style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "12px 28px", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem", fontWeight: 600, color: T.text, background: "transparent", border: `1px solid ${T.border}`, borderRadius: "12px", textDecoration: "none", transition: "all 0.3s ease" }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = T.rosa; e.currentTarget.style.transform = "translateY(-2px)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.transform = "translateY(0)"; }}
+            >
+              💬 Discord
+            </a>
+          </div>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
 /* ───────────────────── FOOTER ───────────────────── */
 function Footer() {
   const { T } = useT();
@@ -1064,7 +1811,22 @@ export default function App() {
 
     const s = document.getElementById("dyn-scroll") || document.createElement("style");
     s.id = "dyn-scroll";
-    s.textContent = `::-webkit-scrollbar-track{background:${T.bg};transition:background 0.5s ease}::-webkit-scrollbar-thumb{background:${T.rosa}44}::-webkit-scrollbar-thumb:hover{background:${T.rosa}88}`;
+    s.textContent = `
+      ::-webkit-scrollbar-track{background:${T.bg};transition:background 0.5s ease}
+      ::-webkit-scrollbar-thumb{background:${T.rosa}44}
+      ::-webkit-scrollbar-thumb:hover{background:${T.rosa}88}
+      body::before {
+        content: " ";
+        display: block;
+        position: fixed;
+        top: 0; left: 0; bottom: 0; right: 0;
+        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+        background-size: 100% 4px;
+        z-index: 999;
+        pointer-events: none;
+        opacity: 0.15;
+      }
+    `;
     if (!document.getElementById("dyn-scroll")) document.head.appendChild(s);
   }, [T]);
 
@@ -1072,7 +1834,9 @@ export default function App() {
     <ThemeCtx.Provider value={{ theme, T, toggle }}>
       {!showPortfolio && <LandingPage onEnter={() => setShowPortfolio(true)} />}
       {showPortfolio && (
-        <div style={{ background: T.bg, minHeight: "100vh", transition: "background 0.5s ease", animation: "fadeIn 0.5s ease" }}>
+        <div style={{ background: T.bg, minHeight: "100vh", transition: "background 0.5s ease", animation: "fadeIn 0.5s ease", position: "relative" }}>
+          {/* CRT overlay */}
+          <div className="crt-overlay" />
           <Scene3DCanvas isDark={theme === "dark"} />
           <CursorGlow />
           <ScrollProgress />
@@ -1080,10 +1844,23 @@ export default function App() {
           <Particles />
           <Navbar />
           <HeroSection />
+          <QuoteBanner />
           <TechMarquee />
+          <Divider />
           <AboutSection />
+          <Divider flip />
+          <JourneySection />
+          <Divider />
           <TechSection />
+          <Divider flip />
+          <CurrentlyInto />
+          <SetupSection />
+          {/* Soundboard removed */}
+          <Divider />
           <GitHubSection />
+          <Divider flip />
+          <FunFacts />
+          <ContactSection />
           <Footer />
           <Terminal />
           <ScrollToTopRewind T={T} theme={theme} />
